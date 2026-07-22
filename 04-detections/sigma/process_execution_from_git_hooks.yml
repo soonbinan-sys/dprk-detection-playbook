@@ -1,0 +1,30 @@
+title: Process execution from a git hooks directory
+id: 7c4e9a2d-1f3b-4a6e-9c2d-8b5f6a1e3d90
+status: experimental
+description: |
+  Detects a process whose command line references a .git/hooks
+  directory. North Korea linked activity documented in May 2026
+  reporting used git pre-commit and post-checkout hooks alongside
+  Jenkins CI/CD to execute malware as part of routine developer
+  workflow, rather than only at npm install time. This technique
+  does not have a clean dedicated MITRE ATT&CK sub-technique yet,
+  tagged here under event triggered execution as the closest fit.
+references:
+  - https://asec.ahnlab.com/en/94145/
+author: Sam An
+date: 2026/07/17
+tags:
+  - attack.persistence
+  - attack.t1546
+  - attack.execution
+logsource:
+  category: process_creation
+detection:
+  selection:
+    CommandLine|contains:
+      - '.git/hooks'
+      - '.git\hooks'
+  condition: selection
+falsepositives:
+  - Legitimate git hook usage, pre-commit linters and commit message validators are common developer tooling. Expect this rule to be noisy in an active dev environment until tuned against your own repos, that tuning process is worth documenting in false-positives.md as its own finding.
+level: medium

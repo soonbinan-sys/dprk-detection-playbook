@@ -1,0 +1,44 @@
+title: Suspicious child process spawned by Node package manager
+id: 3f1b2b1a-6e2a-4c9a-8b1d-9d2b7a4e5f10
+status: experimental
+description: |
+  Detects a script interpreter or shell spawned as a child process of
+  npm, npx, yarn, or node shortly after a package install. Consistent
+  with malicious postinstall or preinstall lifecycle script execution,
+  as seen in the March 2026 UNC1069 compromise of the axios npm
+  package and related Contagious Interview npm campaigns.
+
+  Written for Windows process_creation fields. A Linux or macOS
+  equivalent needs execve based auditd or EDR telemetry with the same
+  parent to child logic, not yet written here.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package
+author: Sam An
+date: 2026/07/17
+tags:
+  - attack.initial-access
+  - attack.t1195.001
+  - attack.execution
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  parent_selection:
+    ParentImage|endswith:
+      - '\npm.cmd'
+      - '\npm-cli.js'
+      - '\node.exe'
+      - '\yarn.cmd'
+      - '\pnpm.cmd'
+  child_selection:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\cmd.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\curl.exe'
+  condition: parent_selection and child_selection
+falsepositives:
+  - Native module compilation that intentionally shells out during install (node-gyp and similar). Baseline your own dev environment before treating hits as suspicious, this is the rule most likely to need tuning.
+level: medium
