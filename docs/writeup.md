@@ -120,13 +120,14 @@ The Windows simulation used `postinstall-callback-simulator.js` to represent a m
 npm lifecycle script. During npm install, normal npm execution launched node.exe, which 
 in turn spawned cmd.exe to execute the simulator.
 
-<img width="4008" height="1545" alt="windows-postinstall-simulation-setup" src="https://github.com/user-attachments/assets/ad56e81b-52f6-46eb-887e-9f05fccf349a" />
+![alt text](../screenshots/windows-postinstall-simulation-setup.png)
 
 
 The telemetry reader (`05-validation/check_telemetry.ps1`) correctly identified these 
 child process relationships and marked the expected events as matches.
 
-<img width="1119" height="880" alt="windows-npm-rule-match" src="https://github.com/user-attachments/assets/d1cb2296-e722-4f44-b0f6-4a42da915244" />
+
+![alt text](../screenshots/windows-npm-rule-match.png)
 
 
 Observed execution chain:
@@ -156,7 +157,9 @@ creation during package installation rather than alert on every `npm install` in
 
 The Linux simulation exercised the Git hook detection using `git-hook-simulator.sh`.
 
-<img width="860" height="91" alt="linux-git-hook-simulation" src="https://github.com/user-attachments/assets/c3987ec5-78c1-4394-b8e9-23ff22af79b2" />
+
+![alt text](../screenshots/linux-git-hook-simulation.png)
+
 
 Auditd captured each stage of the workflow, including copying the simulated hook into 
 `.git/hooks/pre-commit`, making it executable with `chmod +x`, and executing it during 
